@@ -1,39 +1,37 @@
-// let time = 1500; // 25 mins
-let time = 15; // 15 sec for testing
-let timerInterval;
+document.addEventListener("DOMContentLoaded", () => {
+  const timerDisplay = document.getElementById("timer");
+  const startButton = document.getElementById("startBtn");
+  const resetButton = document.getElementById("resetBtn");
 
-const timerDisplay = document.getElementById("timer");
-const startButton = document.getElementById("start");
-const resetButton = document.getElementById("reset");
+  function formatTime(seconds) {
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    return `${m}:${s}`;
+  }
 
-function updateDisplay() {
-  const minutes = Math.floor(time / 60);
-  const seconds = time % 60;
-  timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-}
+  function updateTimer() {
+    chrome.runtime.sendMessage({ command: "getTime" }, (response) => {
+      if (response) {
+        timerDisplay.textContent = formatTime(response.timeLeft);
+      }
+    });
+  }
 
-function startTimer() {
-  if (timerInterval) return;
+  setInterval(updateTimer, 1000);
+  updateTimer();
 
-  timerInterval = setInterval(() => {
-    if (time > 0) {
-      time--;
-      updateDisplay();
-    } else {
-      clearInterval(timerInterval);
-      alert("Time's up!");
+  startButton.addEventListener("click", () => {
+    chrome.runtime.sendMessage({ command: "start" });
+  });
+
+  resetButton.addEventListener("click", () => {
+    chrome.runtime.sendMessage({ command: "reset" });
+  });
+
+  chrome.runtime.onMessage.addListener((msg) => {
+    if (msg.command === "playSound") {
+      const audio = new Audio("sound.mp3");
+      audio.play();
     }
-  }, 1000);
-}
-
-function resetTimer() {
-  clearInterval(timerInterval);
-  timerInterval = null;
-  time = 1500;
-  updateDisplay();
-}
-
-startButton.onclick = startTimer;
-resetButton.onclick = resetTimer;
-
-updateDisplay();
+  });
+});
