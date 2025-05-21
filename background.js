@@ -1,41 +1,41 @@
-let timerDuration = 15; // Default 25 minutes
-let timeLeft = timerDuration;
-let timerRunning = false;
+let timeLeft = 0;
 let timerInterval = null;
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.command === "start") {
-    if (!timerRunning) {
-      timerRunning = true;
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.command === "start") {
+    chrome.storage.local.get("customTime", (data) => {
+      timeLeft = data.customTime || 1500; // default: 25 min
+
+      if (timerInterval) clearInterval(timerInterval);
+
       timerInterval = setInterval(() => {
         timeLeft--;
-        chrome.storage.local.set({ timeLeft });
 
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
-          timerRunning = false;
-          timeLeft = timerDuration;
+          timerInterval = null;
 
-          // Notify user
+          chrome.runtime.sendMessage({ command: "playSound" });
+
           chrome.notifications.create({
             type: "basic",
             iconUrl: "icons/icon128.png",
-            title: "Focus Guardian",
-            message: "Pomodoro complete! Take a break!",
+            title: "Focus Session Complete!",
+            message: "Time's up! 🎯",
             priority: 2
           });
-
-          // Optional: play sound
-          chrome.runtime.sendMessage({ command: "playSound" });
         }
       }, 1000);
-    }
-  } else if (request.command === "reset") {
+    });
+  }
+
+  if (msg.command === "reset") {
     clearInterval(timerInterval);
-    timerRunning = false;
-    timeLeft = timerDuration;
-    chrome.storage.local.set({ timeLeft });
-  } else if (request.command === "getTime") {
-    sendResponse({ timeLeft, timerRunning });
+    timerInterval = null;
+    timeLeft = 0;
+  }
+
+  if (msg.command === "getTime") {
+    sendResponse({ timeLeft });
   }
 });

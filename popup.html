@@ -7,12 +7,18 @@
   <body>
     <div class="container">
       <h1>Focus Guardian</h1>
+
       <div id="timer">00:00</div>
-      <button id="startBtn">Start</button>
-      <button id="resetBtn">Reset</button>
+
+      <!-- Custom input time (minutes) -->
+      <input type="number" id="customTime" placeholder="Enter time (mins)" min="1" />
+
+      <div class="btn-group">
+        <button id="startBtn">Start</button>
+        <button id="resetBtn">Reset</button>
+      </div>
     </div>
 
-    <!-- Important: script comes AFTER the elements -->
     <script src="popup.js"></script>
   </body>
 </html>
