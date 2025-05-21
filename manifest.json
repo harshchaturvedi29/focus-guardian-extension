@@ -4,6 +4,7 @@
   "description": "A Pomodoro + Site Blocker for Productivity",
   "version": "1.0",
   "permissions": ["storage", "tabs", "alarms", "notifications", "scripting"],
+  "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
