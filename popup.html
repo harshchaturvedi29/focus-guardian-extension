@@ -1,24 +1,50 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Focus Guardian</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="container">
-      <h1>Focus Guardian</h1>
-
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Focus Guardian</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="section pomodoro-section">
+      <h2>Pomodoro Timer</h2>
       <div id="timer">00:00</div>
-
-      <!-- Custom input time (minutes) -->
-      <input type="number" id="customTime" placeholder="Enter time (mins)" min="1" />
-
-      <div class="btn-group">
-        <button id="startBtn">Start</button>
+      <input
+        type="number"
+        id="customTime"
+        placeholder="Set Pomodoro (minutes)"
+        min="1"
+      />
+      <div class="button-group">
+        <button id="startPauseBtn">Start</button>
         <button id="resetBtn">Reset</button>
       </div>
     </div>
 
-    <script src="popup.js"></script>
-  </body>
+    <div class="section domain-section">
+      <h2>Domain Tracking</h2>
+      <div id="currentDomain">
+        <h3>Current Domain</h3>
+        <div id="domainInfo">No active domain</div>
+        <div id="domainProgress" class="progress-bar">
+          <div class="progress"></div>
+        </div>
+      </div>
+      
+      <div id="domainList">
+        <h3>Tracked Domains</h3>
+        <div id="domains"></div>
+      </div>
+
+      <div id="blockedDomains">
+        <h3>Blocked Domains</h3>
+        <div id="blockedList"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
 </html>
